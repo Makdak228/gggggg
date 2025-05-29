@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Словарь программиста</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 15, 40, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+        }
+        
+        .alphabet-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 25px 0;
+            padding: 15px;
+            background: rgba(0, 30, 60, 0.7);
+            border-radius: 10px;
+        }
+        
+        .letter-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom, #4a69bd, #1e3799);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .letter-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+        }
+        
+        .letter-btn.active {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+        }
+        
+        .terms-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .term-card {
+            background: linear-gradient(145deg, #1e3c72, #2a5298);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+        
+        .term-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        }
+        
+        .term-card.jargon {
+            border-left: 4px solid #e74c3c;
+            background: linear-gradient(145deg, #6a3093, #a044ff);
+        }
+        
+        .term-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .term-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .term-type {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .professional .term-type {
+            background: rgba(52, 152, 219, 0.3);
+            color: #3498db;
+        }
+        
+        .jargon .term-type {
+            background: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+        
+        .term-description {
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-info {
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .terms-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .letter-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Словарь программиста</h1>
+            <p class="subtitle">Профессиональные термины и жаргон разработчиков с удобной навигацией по алфавиту</p>
+        </header>
+        
+        <div class="controls">
+            <button class="filter-btn active" data-filter="all">Все термины</button>
+            <button class="filter-btn" data-filter="professional">Профессиональные</button>
+            <button class="filter-btn" data-filter="jargon">Жаргон</button>
+        </div>
+        
+        <div class="alphabet-nav" id="alphabetNav">
+            <!-- Буквы русского алфавита будут добавлены через JS -->
+        </div>
+        
+        <div class="terms-container" id="termsContainer">
+            <!-- Термины будут добавлены через JS -->
+        </div>
+        
+        <footer>
+            <p>Словарь программиста © 2025 | Профессиональные и жаргонные термины разработки ПО</p>
+            <div class="footer-info">Белицкий Юрий | Группа КС-21</div>
+        </footer>
+    </div>
+
+    <script>
+        // Словарь терминов
+        const terms = [
+            // Профессиональные термины (40)
+            { id: 1, term: "Алгоритм", description: "Конечный набор инструкций для решения задачи", type: "professional", letter: "А" },
+            { id: 2, term: "Баг", description: "Ошибка в программе, приводящая к некорректной работе", type: "professional", letter: "Б" },
+            { id: 3, term: "Ветка", description: "Направление разработки, изолированное от основного кода", type: "professional", letter: "В" },
+            { id: 4, term: "Гит", description: "Система контроля версий Git", type: "professional", letter: "Г" },
+            { id: 5, term: "Деплой", description: "Процесс развертывания приложения на сервере", type: "professional", letter: "Д" },
+            { id: 6, term: "Интерфейс", description: "Средство взаимодействия между компонентами системы", type: "professional", letter: "И" },
+            { id: 7, term: "Компилятор", description: "Программа, переводящая код в машинные инструкции", type: "professional", letter: "К" },
+            { id: 8, term: "Логирование", description: "Процесс записи информации о работе программы", type: "professional", letter: "Л" },
+            { id: 9, term: "Методология", description: "Система принципов и методов разработки ПО", type: "professional", letter: "М" },
+            { id: 10, term: "Обфускация", description: "Защита кода путем его преобразования в трудночитаемую форму", type: "professional", letter: "О" },
+            { id: 11, term: "Патч", description: "Обновление, устраняющее ошибки в программе", type: "professional", letter: "П" },
+            { id: 12, term: "Репозиторий", description: "Хранилище исходного кода и истории его изменений", type: "professional", letter: "Р" },
+            { id: 13, term: "Сервер", description: "Компьютер или программа, предоставляющая ресурсы", type: "professional", letter: "С" },
+            { id: 14, term: "Тестирование", description: "Процесс проверки корректности работы программы", type: "professional", letter: "Т" },
+            { id: 15, term: "Фреймворк", description: "Структура для разработки программных систем", type: "professional", letter: "Ф" },
+            { id: 16, term: "Хост", description: "Компьютер, подключенный к сети и предоставляющий сервисы", type: "professional", letter: "Х" },
+            { id: 17, term: "Цикломатическая сложность", description: "Метрика, оценивающая сложность программы", type: "professional", letter: "Ц" },
+            { id: 18, term: "Чтение логов", description: "Анализ записей о работе программы для поиска проблем", type: "professional", letter: "Ч" },
+            { id: 19, term: "Шифрование", description: "Преобразование данных для защиты от несанкционированного доступа", type: "professional", letter: "Ш" },
+            { id: 20, term: "Эксплойт", description: "Программа, использующая уязвимости в ПО", type: "professional", letter: "Э" },
+            { id: 21, term: "Юнит-тест", description: "Тестирование отдельных компонентов программы", type: "professional", letter: "Ю" },
+            { id: 22, term: "Язык программирования", description: "Формальная система для написания компьютерных программ", type: "professional", letter: "Я" },
+            { id: 23, term: "Асинхронность", description: "Выполнение операций без ожидания завершения предыдущих", type: "professional", letter: "А" },
+            { id: 24, term: "Библиотека", description: "Коллекция готовых функций и классов для разработки", type: "professional", letter: "Б" },
+            { id: 25, term: "Валидация", description: "Проверка данных на соответствие требованиям", type: "professional", letter: "В" },
+            { id: 26, term: "Генерация кода", description: "Автоматическое создание исходного кода программы", type: "professional", letter: "Г" },
+            { id: 27, term: "Документация", description: "Описание программы, её возможностей и использования", type: "professional", letter: "Д" },
+            { id: 28, term: "Интеграция", description: "Объединение компонентов в единую систему", type: "professional", letter: "И" },
+            { id: 29, term: "Контейнеризация", description: "Технология упаковки приложения со всем окружением", type: "professional", letter: "К" },
+            { id: 30, term: "Линтер", description: "Инструмент статического анализа кода", type: "professional", letter: "Л" },
+            { id: 31, term: "Модуль", description: "Отдельный компонент программы с определенной функциональностью", type: "professional", letter: "М" },
+            { id: 32, term: "Нейросеть", description: "Вычислительная система, имитирующая работу мозга", type: "professional", letter: "Н" },
+            { id: 33, term: "Оптимизация", description: "Улучшение характеристик программы", type: "professional", letter: "О" },
+            { id: 34, term: "Парадигма", description: "Совокупность идей и понятий, определяющих стиль программирования", type: "professional", letter: "П" },
+            { id: 35, term: "Рефакторинг", description: "Изменение структуры кода без изменения его поведения", type: "professional", letter: "Р" },
+            { id: 36, term: "Синтаксис", description: "Правила написания конструкций языка программирования", type: "professional", letter: "С" },
+            { id: 37, term: "Типизация", description: "Назначение типа данных для переменных", type: "professional", letter: "Т" },
+            { id: 38, term: "Уязвимость", description: "Слабое место в системе, которое может быть использовано злоумышленником", type: "professional", letter: "У" },
+            { id: 39, term: "Функция", description: "Блок кода, выполняющий определенную задачу", type: "professional", letter: "Ф" },
+            { id: 40, term: "Хеширование", description: "Преобразование данных в уникальную строку фиксированной длины", type: "professional", letter: "Х" },
+            
+// Жаргонные термины (40)
+{ id: 41, term: "Адаптер", description: "Класс или функция, преобразующая интерфейс для совместимости", type: "jargon", letter: "А" },
+{ id: 42, term: "Библиотека", description: "Набор готовых функций для решения определённых задач", type: "jargon", letter: "Б" },
+{ id: 43, term: "Верстка", description: "Процесс создания структуры и визуального оформления веб-страницы", type: "jargon", letter: "В" },
+{ id: 44, term: "Движок", description: "Основная часть программы, отвечающая за выполнение ключевых функций", type: "jargon", letter: "Д" },
+{ id: 45, term: "Дебаг", description: "Процесс поиска и устранения ошибок в коде", type: "jargon", letter: "Д" },
+{ id: 46, term: "Железо", description: "Физические компоненты компьютера или устройства", type: "jargon", letter: "Ж" },
+{ id: 47, term: "Запрос", description: "Сигнал или команда, отправляемая серверу для получения данных", type: "jargon", letter: "З" },
+{ id: 48, term: "Интерфейс", description: "Средство взаимодействия между пользователем и программой", type: "jargon", letter: "И" },
+{ id: 49, term: "Компонент", description: "Отдельная часть приложения, выполняющая конкретную функцию", type: "jargon", letter: "К" },
+{ id: 50, term: "Логика", description: "Программные правила и алгоритмы, реализующие поведение приложения", type: "jargon", letter: "Л" },
+{ id: 51, term: "Модуль", description: "Автономная часть системы, реализующая конкретную функциональность", type: "jargon", letter: "М" },
+{ id: 52, term: "Нод", description: "Узел в системе или элемент графа, например, в дереве DOM", type: "jargon", letter: "Н" },
+{ id: 53, term: "Объект", description: "Структура данных, содержащая свойства и методы", type: "jargon", letter: "О" },
+{ id: 54, term: "Плагин", description: "Расширение, добавляющее дополнительные функции к основной программе", type: "jargon", letter: "П" },
+{ id: 55, term: "Ресурс", description: "Любой файл или данные, используемые в приложении", type: "jargon", letter: "Р" },
+{ id: 56, term: "Сервис", description: "Функционал, предоставляемый одной системой другой через API", type: "jargon", letter: "С" },
+{ id: 57, term: "Таймер", description: "Механизм, запускающий событие через заданный промежуток времени", type: "jargon", letter: "Т" },
+{ id: 58, term: "Утилита", description: "Вспомогательная программа или функция для выполнения технических задач", type: "jargon", letter: "У" },
+{ id: 59, term: "Фреймворк", description: "Структура для разработки приложений с готовыми инструментами", type: "jargon", letter: "Ф" },
+{ id: 60, term: "Хук", description: "Механизм, позволяющий взаимодействовать с жизненным циклом компонента", type: "jargon", letter: "Х" },
+{ id: 61, term: "Цикл", description: "Повторяющаяся последовательность операций", type: "jargon", letter: "Ц" },
+{ id: 62, term: "Чистка", description: "Удаление ненужных или устаревших данных из памяти", type: "jargon", letter: "Ч" },
+{ id: 63, term: "Шина", description: "Система передачи данных между компонентами", type: "jargon", letter: "Ш" },
+{ id: 64, term: "Щелчок", description: "Одиночное действие пользователя, например, клик мышью", type: "jargon", letter: "Щ" },
+{ id: 65, term: "Экземпляр", description: "Конкретная реализация класса или объекта", type: "jargon", letter: "Э" },
+{ id: 66, term: "Юнит", description: "Единичный тест для проверки работы отдельного участка кода", type: "jargon", letter: "Ю" },
+{ id: 67, term: "Ядро", description: "Центральная часть операционной системы или библиотеки", type: "jargon", letter: "Я" },
+{ id: 68, term: "API", description: "Интерфейс программирования приложений для обмена данными", type: "jargon", letter: "A" },
+{ id: 69, term: "Бранч", description: "Ветка разработки в системе контроля версий", type: "jargon", letter: "Б" },
+{ id: 70, term: "Вёрсия", description: "Номер обновления программы или библиотеки", type: "jargon", letter: "В" },
+{ id: 71, term: "Глагол", description: "HTTP-метод запроса (GET, POST и др.)", type: "jargon", letter: "Г" },
+{ id: 72, term: "Деплой", description: "Процесс загрузки и запуска приложения на сервере", type: "jargon", letter: "Д" },
+{ id: 73, term: "Жаба", description: "Язык программирования Java", type: "jargon", letter: "Ж" },
+{ id: 74, term: "Запрос", description: "HTTP-запрос от клиента к серверу", type: "jargon", letter: "З" },
+{ id: 75, term: "Изи", description: "Простое решение или задача без сложностей", type: "jargon", letter: "И" },
+{ id: 76, term: "Коммит", description: "Фиксация изменений в системе контроля версий", type: "jargon", letter: "К" },
+{ id: 77, term: "Линтер", description: "Инструмент проверки качества и стиля кода", type: "jargon", letter: "Л" },
+{ id: 78, term: "Ман", description: "Руководство или документация к команде или функции", type: "jargon", letter: "М" },
+{ id: 79, term: "Нода", description: "Узел в структуре данных или сети", type: "jargon", letter: "Н" },
+{ id: 80, term: "Оптимизация", description: "Улучшение производительности или эффективности кода", type: "jargon", letter: "О" }
+        ];
+
+        // Создаем алфавитную навигацию
+        const alphabetNav = document.getElementById('alphabetNav');
+        const termsContainer = document.getElementById('termsContainer');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        // Русский алфавит
+        const russianAlphabet = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+        
+        // Создаем кнопки для алфавита
+        for (let letter of russianAlphabet) {
+            const button = document.createElement('button');
+            button.className = 'letter-btn';
+            button.textContent = letter;
+            button.dataset.letter = letter;
+            button.addEventListener('click', () => filterTermsByLetter(letter));
+            alphabetNav.appendChild(button);
+        }
+        
+        // Переменные для текущих фильтров
+        let currentFilter = 'all';
+        let currentLetter = null;
+        
+        // Функция фильтрации терминов
+        function filterTerms() {
+            termsContainer.innerHTML = '';
+            
+            const filteredTerms = terms.filter(term => {
+                const typeMatch = currentFilter === 'all' || term.type === currentFilter;
+                const letterMatch = !currentLetter || term.letter === currentLetter;
+                return typeMatch && letterMatch;
+            });
+            
+            if (filteredTerms.length === 0) {
+                termsContainer.innerHTML = '<div class="no-results">Термины по вашему запросу не найдены</div>';
+                return;
+            }
+            
+            filteredTerms.forEach(term => {
+                const termCard = document.createElement('div');
+                termCard.className = `term-card ${term.type}`;
+                termCard.innerHTML = `
+                    <div class="term-header">
+                        <div class="term-title">${term.term}</div>
+                        <div class="term-type">${term.type === 'professional' ? 'Проф.' : 'Жаргон'}</div>
+                    </div>
+                    <div class="term-description">${term.description}</div>
+                `;
+                termsContainer.appendChild(termCard);
+            });
+        }
+        
+        // Функция фильтрации по букве
+        function filterTermsByLetter(letter) {
+            // Снимаем выделение со всех кнопок
+            document.querySelectorAll('.letter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Если кликнули на уже активную букву - снимаем фильтр
+            if (currentLetter === letter) {
+                currentLetter = null;
+            } else {
+                currentLetter = letter;
+                document.querySelector(`.letter-btn[data-letter="${letter}"]`).classList.add('active');
+            }
+            
+            filterTerms();
+        }
+        
+        // Инициализация кнопок фильтра
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.dataset.filter;
+                filterTerms();
+            });
+        });
+        
+        // Первоначальная загрузка терминов
+        filterTerms();
+    </script>
+</body>
+</html>
